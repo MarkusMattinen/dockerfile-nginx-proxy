@@ -1,5 +1,5 @@
 # nginx proxy, confd and supervisord on trusty
-FROM markusma/nginx:trusty
+FROM markusma/nginx-confd:trusty
 MAINTAINER Markus Mattinen <docker@gamma.fi>
 
 ADD config/etc/confd/conf.d /etc/confd/conf.d
