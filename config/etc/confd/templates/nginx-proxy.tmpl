@@ -133,9 +133,7 @@ http {
 {{if $app.Nodes}}
     upstream {{Base $app.Key}} {
 {{range $upstream := $app.Nodes}}
-{{range $server := $upstream.Nodes}}
-        server {{$server.Value}};
-{{end}}
+        server {{$upstream.Value}};
 {{end}}
     }
 
