@@ -5,4 +5,4 @@ until confd -onetime -node http://$ETCD_PORT_4001_TCP_ADDR:$ETCD_PORT_4001_TCP_P
   sleep 5
 done
 
-exec /usr/bin/supervisord
+exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
