@@ -124,7 +124,7 @@ http {
 
 {{range $domain := .nginx_www_redirect_domains}}
     server {
-        listen [::]:443 ssl ipv6only=off;
+        listen [::]:443;
         server_name www.{{ Base $domain.Key }};
         return 301 https://{{ Base $domain.Key}}$request_uri;
     }
