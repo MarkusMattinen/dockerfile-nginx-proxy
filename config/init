@@ -3,6 +3,7 @@
 echo "[confd] waiting for confd to refresh config files"
 until confd -onetime -node http://$ETCD_PORT_4001_TCP_ADDR:$ETCD_PORT_4001_TCP_PORT -config-file /etc/confd/confd.toml; do
   sleep 1
+  curl -sSL -o /dev/null -XPUT -d "value=dummy" http://$ETCD_PORT_4001_TCP_ADDR:$ETCD_PORT_4001_TCP_PORT/v2/keys/nginx_www_redirect_domains/dummy
 done
 
 exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
