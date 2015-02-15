@@ -125,29 +125,28 @@ http {
         return 404;
     }
 
-{{range $domain := .nginx_www_redirect_domains}}
+{{range gets "/nginx_www_redirect_domains/*"}}
     server {
         listen [::]:443;
-        server_name www.{{ Base $domain.Key }};
-        return 301 https://{{ Base $domain.Key}}$request_uri;
+        server_name www.{{ base .Key }};
+        return 301 https://{{ base .Key}}$request_uri;
     }
 {{end}}
-{{range $app := .nginx_proxy}}
-{{if $app.Nodes}}
-    upstream {{Base $app.Key}} {
-{{range $upstream := $app.Nodes}}
-        server {{$upstream.Value}};
-{{end}}
+
+{{range $app := lsdir "/nginx_proxy"}}
+    upstream {{$app}} {
+  {{$appdir := printf "/nginx_proxy/%s/*" $app}}{{range gets $appdir}}
+        server {{.Value}};
+  {{end}}
     }
 
     server {
         listen [::]:443;
-        server_name {{Base $app.Key}};
+        server_name {{$app}};
 
         location / {
-            proxy_pass http://{{Base $app.Key}};
+            proxy_pass http://{{$app}};
         }
     }
-{{end}}
 {{end}}
 }
