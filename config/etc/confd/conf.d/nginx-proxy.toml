@@ -1,7 +1,7 @@
 [template]
 keys = [
-  "nginx_proxy",
-  "nginx_www_redirect_domains"
+  "/nginx_proxy",
+  "/nginx_www_redirect_domains"
 ]
 mode = "0644"
 src = "nginx-proxy.tmpl"
