@@ -1,4 +1,4 @@
-[confd]
 confdir = "/etc/confd"
 interval = 5
 quiet = true
+watch = true
