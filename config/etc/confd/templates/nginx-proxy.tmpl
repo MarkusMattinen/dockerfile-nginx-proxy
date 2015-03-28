@@ -125,11 +125,11 @@ http {
         return 404;
     }
 
-{{range gets "/nginx_www_redirect_domains/*"}}
+{{range $domain := ls "/nginx_www_redirect_domains"}}
     server {
         listen [::]:443;
-        server_name www.{{ base .Key }};
-        return 301 https://{{ base .Key}}$request_uri;
+        server_name www.{{$domain}};
+        return 301 https://{{$domain}}$request_uri;
     }
 {{end}}
 
