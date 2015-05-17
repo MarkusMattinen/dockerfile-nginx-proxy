@@ -131,7 +131,15 @@ http {
 
     server {
         listen [::]:443 ssl ipv6only=off default;
+        server_name _;
+
+        {{ if getenv "FALLBACK_PROXY" }}
+        location / {
+            proxy_pass {{ getenv "FALLBACK_PROXY" }};
+        }
+        {{ else }}
         return 404;
+        {{ end }}
     }
 
 {{range $domain := ls "/nginx_www_redirect_domains"}}
