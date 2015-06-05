@@ -12,13 +12,13 @@ events {
 }
 
 map $http_upgrade $connection_upgrade { default upgrade; '' close; }
-map $http_x_forwarded_by $header_x_forwarded_by { '' $server_addr_port; }
-map $http_x_forwarded_port $header_x_forwarded_port { '' $server_port; }
-map $http_x_forwarded_proto $header_x_forwarded_proto { '' $scheme; }
-map $http_x_forwarded_protocol $header_x_forwarded_protocol { '' $scheme; }
-map $http_x_forwarder_server $header_x_forwarder_server { '' $host; }
-map $http_x_real_ip $header_x_real_ip { '' $remote_addr; }
-map $http_x_scheme $header_x_scheme { '' $scheme; }
+map $http_x_forwarded_by $header_x_forwarded_by { default $http_x_forwarded_by; '' $server_addr_port; }
+map $http_x_forwarded_port $header_x_forwarded_port { default $http_x_forwarded_port; '' $server_port; }
+map $http_x_forwarded_proto $header_x_forwarded_proto { default $http_x_forwarded_proto; '' $scheme; }
+map $http_x_forwarded_protocol $header_x_forwarded_protocol { default $http_x_forwarded_protocol; '' $scheme; }
+map $http_x_forwarder_server $header_x_forwarder_server { default $http_x_forwarder_server; '' $host; }
+map $http_x_real_ip $header_x_real_ip { default $http_x_real_ip; '' $remote_addr; }
+map $http_x_scheme $header_x_scheme { default $http_x_scheme; '' $scheme; }
 
 http {
     set $server_addr_port '${server_addr}:${server_port}';
