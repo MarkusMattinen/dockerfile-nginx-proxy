@@ -22,7 +22,7 @@ http {
     map $http_x_scheme $header_x_scheme { default $http_x_scheme; '' $scheme; }
 
     types_hash_bucket_size 64;
-    server_names_hash_bucket_size 64;
+    server_names_hash_bucket_size 256;
     variables_hash_bucket_size 128;
     proxy_headers_hash_max_size 1024;
     proxy_headers_hash_bucket_size 128;
@@ -158,7 +158,7 @@ http {
     server {
         set $server_addr_port '${server_addr}:${server_port}';
         listen [::]:443;
-        server_name www.{{$domain}};
+        server_name www.{{$domain}} ipv4.{{$domain}} ipv6.{{$domain}};
         return 301 https://{{$domain}}$request_uri;
     }
 {{end}}
@@ -173,7 +173,7 @@ http {
     server {
         set $server_addr_port '${server_addr}:${server_port}';
         listen [::]:443;
-        server_name {{$app}};
+        server_name {{$app}} ipv4-{{$app}} ipv6-{{$app}};
 
         location / {
             proxy_pass http://{{$app}};
