@@ -81,9 +81,6 @@ http {
     proxy_buffering off;
     proxy_max_temp_file_size 0;
 
-    ssl_certificate /usr/local/etc/ssl/private/tls.crt;
-    ssl_certificate_key /usr/local/etc/ssl/private/tls.key;
-
     # ciphers last checked 2013-04-23
     #
     # 90% protocols, 80% Key Exchange and 90% Cipher Strength
@@ -131,7 +128,6 @@ http {
     ssl_session_timeout 10m;
     ssl_stapling on;
     ssl_stapling_verify on;
-    ssl_trusted_certificate /usr/local/etc/ssl/private/ca.crt;
     more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload";
 
     server {
@@ -144,6 +140,10 @@ http {
         set $server_addr_port '${server_addr}:${server_port}';
         listen [::]:443 ssl ipv6only=off default;
         server_name _;
+
+        ssl_certificate /usr/local/etc/ssl/private/tls.crt;
+        ssl_certificate_key /usr/local/etc/ssl/private/tls.key;
+        ssl_trusted_certificate /usr/local/etc/ssl/private/ca.crt;
 
         {{ if getenv "FALLBACK_PROXY" }}
         location / {
@@ -158,6 +158,11 @@ http {
     server {
         set $server_addr_port '${server_addr}:${server_port}';
         listen [::]:443;
+
+        ssl_certificate /usr/local/etc/ssl/private/www.{{$domain}}/tls.crt;
+        ssl_certificate_key /usr/local/etc/ssl/private/www.{{$domain}}/tls.key;
+        ssl_trusted_certificate /usr/local/etc/ssl/private/www.{{$domain}}/ca.crt;
+
         server_name www.{{$domain}} ipv4.{{$domain}} ipv6.{{$domain}};
         return 301 https://{{$domain}}$request_uri;
     }
@@ -173,6 +178,11 @@ http {
     server {
         set $server_addr_port '${server_addr}:${server_port}';
         listen [::]:443;
+
+        ssl_certificate /usr/local/etc/ssl/private/{{$app}}/tls.crt;
+        ssl_certificate_key /usr/local/etc/ssl/private/{{$app}}/tls.key;
+        ssl_trusted_certificate /usr/local/etc/ssl/private/{{$app}}/ca.crt;
+
         server_name {{$app}} ipv4-{{$app}} ipv6-{{$app}};
 
         location / {
