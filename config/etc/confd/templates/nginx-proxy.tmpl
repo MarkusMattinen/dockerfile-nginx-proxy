@@ -81,54 +81,20 @@ http {
     proxy_buffering off;
     proxy_max_temp_file_size 0;
 
-    # ciphers last checked 2013-04-23
-    #
-    # 90% protocols, 80% Key Exchange and 90% Cipher Strength
-    # unsupported browsers                 -
-    # ssl_protocols SSLv3 TLSv1 TLSv1.1 TLSv1.2;
-    # ssl_dhparam /etc/nginx/dhparam1024.pem;
-    # ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES128-SHA:DES-CBC3-SHA;
-    #
-    # 95% protocols, 80% Key Exchange and 90% Cipher Strength
-    # unsupported browsers                 IE 6 / Windows XP (TLSv1), YandexBot (TLSv1)
-    # ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-    # ssl_dhparam /etc/nginx/dhparam1024.pem;
-    # ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES128-SHA:DES-CBC3-SHA;
-    #
-    # 95% Protocols, 100% Key Exchange and 90% Cipher Strength
-    # unsupported browsers                 IE 6 / Windows XP (TLSv1), YandexBot (TLSv1), Java 6u45 (2048 bit DH)
-    # ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-    # ssl_dhparam /etc/nginx/dhparam4096.pem;
-    # ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES128-SHA:DES-CBC3-SHA;
-
-    # 95% Protocols, 100% Key Exchange and 100% Cipher Strength
-    # unsupported browsers                 IE 8 / Windows XP (AES), IE 6 / Windows XP (TLSv1), YandexBot (TLSv1), Java 6u45 (2048 bit DH)
-    # ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-    # ssl_dhparam /etc/nginx/dhparam4096.pem;
-    # ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES128-SHA;
-    #
-    # 95% Protocols, 100% Key Exchange and 100% Cipher Strength
-    # unsupported browsers                 Java 7u25 (AES256), Android 2.3.7 (AES256), Java 6e45 (AES256), IE 8 / Windows XP (AES), IE 6 / Windows XP (TLSv1), YandexBot (TLSv1), Java 6u45 (2048 bit DH), Java 8b132 (AES256)
-    # ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-    # ssl_dhparam /etc/nginx/dhparam4096.pem;
-    # ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:DHE-RSA-AES256-SHA;
-    #
-    # 100% Protocols, 100% Key Exchange and 100% Cipher Strength
-    # unsupported browsers                 Java 7u25 (AES256), Android 2.3.7 (AES256), Java 6e45 (AES256), IE 8 / Windows XP (AES), IE 6 / Windows XP (TLSv1), YandexBot (TLSv1), Java 6u45 (2048 bit DH), Java 8b132 (AES256), Android 4.0.4 (TLSv1.2), Android 4.1.1 (TLSv1.2), Android 4.2.2 (TLSv1.2), Android 4.3 (TLSv1.2), BingBot Dec 2013 (TLSv1.2), Firefox 24.2.0 ESR / Win 7 (TLSv1.2), Googlebot Oct 2013 (TLSv1.2), IE 7 / Vista (TLSv1.2), IE 8-10 / Win 7 (TLSv1.2), IE 11 / Win 7 (TLSv1.2), IE 11 / Win 8.1 (TLSv1.2), Safari 5.1.9 / OS X 10.6.8 (TLSv1.2), Safari 6.0.4 / OS X 10.8.4 (TLSv1.2), Yahoo Slurp Oct 2013, BingPreview Dec 2013 (TLSv1.2), OpenSSL 0.9.8y (TLSv1.2)
-    # ssl_protocols TLSv1.2;
-    # ssl_dhparam /etc/nginx/dhparam4096.pem;
-    # ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA;
-
-    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_tickets off;
+    
     ssl_dhparam /etc/nginx/dhparam4096.pem;
-    ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES128-SHA;
 
+    ssl_protocols TLSv1.2;
+    ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';
     ssl_prefer_server_ciphers on;
-    ssl_session_cache shared:SSL:10m;
-    ssl_session_timeout 10m;
+    
+    more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload";
+
     ssl_stapling on;
     ssl_stapling_verify on;
-    more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload";
 
     server {
         set $server_addr_port '${server_addr}:${server_port}';
