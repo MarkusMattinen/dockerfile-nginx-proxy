@@ -56,9 +56,9 @@ http {
     gzip_vary on;
     gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
-    more_set_headers "X-Content-Type-Options: nosniff";
-    more_set_headers "X-XSS-Protection: 1; mode=block";
-    more_set_headers "X-Permitted-Cross-Domain-Policies: master-only";
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection: "1; mode=block" always;
+    add_header X-Permitted-Cross-Domain-Policies "master-only" always;
     more_clear_headers 'X-Powered-By';
     more_clear_headers 'Server';
 
@@ -92,7 +92,7 @@ http {
     ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';
     ssl_prefer_server_ciphers on;
     
-    more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload";
+    add_header "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload" always;
 
     ssl_stapling on;
     ssl_stapling_verify on;
