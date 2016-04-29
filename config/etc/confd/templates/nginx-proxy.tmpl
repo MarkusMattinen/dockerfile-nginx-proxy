@@ -57,7 +57,7 @@ http {
     gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
     add_header X-Content-Type-Options "nosniff" always;
-    add_header X-XSS-Protection: "1; mode=block" always;
+    add_header X-XSS-Protection "1; mode=block" always;
     add_header X-Permitted-Cross-Domain-Policies "master-only" always;
     more_clear_headers 'X-Powered-By';
     more_clear_headers 'Server';
