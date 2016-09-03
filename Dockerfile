@@ -1,5 +1,5 @@
 FROM markusma/nginx:1.10
-MAINTAINER Markus Mattinen <docker@gamma.fi>
+MAINTAINER Markus Mattinen <markus@gamma.fi>
 
 ADD config/etc/confd /etc/confd
 ADD config/etc/nginx /etc/nginx
