@@ -1,3 +1,4 @@
+# nginx proxy, confd and supervisord on Ubuntu Trusty
 FROM markusma/nginx:1.10
 MAINTAINER Markus Mattinen <markus@gamma.fi>
 

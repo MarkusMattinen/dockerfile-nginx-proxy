@@ -1,0 +1,169 @@
+# /etc/nginx/nginx.conf
+
+daemon off;
+worker_processes 1;
+user www-data;
+error_log /dev/stdout info;
+
+events {
+    worker_connections 512;
+    use epoll;
+    multi_accept on;
+}
+
+http {
+    types_hash_bucket_size 64;
+    server_names_hash_bucket_size 64;
+    variables_hash_bucket_size 128;
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+    charset utf-8;
+
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+    access_log /dev/stdout main;
+
+    client_max_body_size 10G;
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    proxy_connect_timeout 600;
+    proxy_send_timeout 600;
+    proxy_read_timeout 600;
+    send_timeout 600;
+    client_body_timeout 600;
+    client_header_timeout 600;
+    keepalive_timeout 600;
+    resolver 8.8.8.8;
+    server_tokens off;
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_types text/plain text/css text/xml application/xml application/xml+rss text/javascript application/javascript;
+    gzip_http_version 1.0;
+
+    more_set_headers "X-Content-Type-Options: nosniff";
+    more_set_headers "X-XSS-Protection: 1; mode=block";
+    more_set_headers "X-Permitted-Cross-Domain-Policies: master-only";
+    more_clear_headers 'X-Powered-By';
+    more_clear_headers 'Server';
+
+    map $http_upgrade $connection_upgrade {
+         default upgrade;
+         '' close;
+    }
+
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Forwarded-Port $server_port;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-Protocol $scheme;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-By $server_addr:$server_port;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+    proxy_redirect off;
+    proxy_buffering off;
+    proxy_max_temp_file_size 0;
+
+    ssl_certificate /usr/local/etc/ssl/private/tls.crt;
+    ssl_certificate_key /usr/local/etc/ssl/private/tls.key;
+
+    # ciphers last checked 2013-04-23
+    #
+    # 90% protocols, 80% Key Exchange and 90% Cipher Strength
+    # unsupported browsers                 -
+    # ssl_protocols SSLv3 TLSv1 TLSv1.1 TLSv1.2;
+    # ssl_dhparam /etc/nginx/dhparam1024.pem;
+    # ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES128-SHA:DES-CBC3-SHA;
+    #
+    # 95% protocols, 80% Key Exchange and 90% Cipher Strength
+    # unsupported browsers                 IE 6 / Windows XP (TLSv1), YandexBot (TLSv1)
+    # ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    # ssl_dhparam /etc/nginx/dhparam1024.pem;
+    # ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES128-SHA:DES-CBC3-SHA;
+    #
+    # 95% Protocols, 100% Key Exchange and 90% Cipher Strength
+    # unsupported browsers                 IE 6 / Windows XP (TLSv1), YandexBot (TLSv1), Java 6u45 (2048 bit DH)
+    # ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    # ssl_dhparam /etc/nginx/dhparam4096.pem;
+    # ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES128-SHA:DES-CBC3-SHA;
+
+    # 95% Protocols, 100% Key Exchange and 100% Cipher Strength
+    # unsupported browsers                 IE 8 / Windows XP (AES), IE 6 / Windows XP (TLSv1), YandexBot (TLSv1), Java 6u45 (2048 bit DH)
+    # ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    # ssl_dhparam /etc/nginx/dhparam4096.pem;
+    # ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES128-SHA;
+    #
+    # 95% Protocols, 100% Key Exchange and 100% Cipher Strength
+    # unsupported browsers                 Java 7u25 (AES256), Android 2.3.7 (AES256), Java 6e45 (AES256), IE 8 / Windows XP (AES), IE 6 / Windows XP (TLSv1), YandexBot (TLSv1), Java 6u45 (2048 bit DH), Java 8b132 (AES256)
+    # ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    # ssl_dhparam /etc/nginx/dhparam4096.pem;
+    # ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:DHE-RSA-AES256-SHA;
+    #
+    # 100% Protocols, 100% Key Exchange and 100% Cipher Strength
+    # unsupported browsers                 Java 7u25 (AES256), Android 2.3.7 (AES256), Java 6e45 (AES256), IE 8 / Windows XP (AES), IE 6 / Windows XP (TLSv1), YandexBot (TLSv1), Java 6u45 (2048 bit DH), Java 8b132 (AES256), Android 4.0.4 (TLSv1.2), Android 4.1.1 (TLSv1.2), Android 4.2.2 (TLSv1.2), Android 4.3 (TLSv1.2), BingBot Dec 2013 (TLSv1.2), Firefox 24.2.0 ESR / Win 7 (TLSv1.2), Googlebot Oct 2013 (TLSv1.2), IE 7 / Vista (TLSv1.2), IE 8-10 / Win 7 (TLSv1.2), IE 11 / Win 7 (TLSv1.2), IE 11 / Win 8.1 (TLSv1.2), Safari 5.1.9 / OS X 10.6.8 (TLSv1.2), Safari 6.0.4 / OS X 10.8.4 (TLSv1.2), Yahoo Slurp Oct 2013, BingPreview Dec 2013 (TLSv1.2), OpenSSL 0.9.8y (TLSv1.2)
+    # ssl_protocols TLSv1.2;
+    # ssl_dhparam /etc/nginx/dhparam4096.pem;
+    # ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA;
+
+    #ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    #ssl_dhparam /etc/nginx/dhparam4096.pem;
+    #ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES128-SHA;
+
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_dhparam /etc/nginx/dhparam4096.pem;
+    ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES128-SHA;
+
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    ssl_trusted_certificate /usr/local/etc/ssl/private/ca.crt;
+    more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains";
+    server {
+        listen [::]:80 default ipv6only=off;
+        return 301 https://$host$request_uri;
+    }
+
+    server {
+        listen [::]:443 ssl ipv6only=off default;
+        server_name _;
+
+        {{ if getenv "FALLBACK_PROXY" }}
+        location / {
+            proxy_pass {{ getenv "FALLBACK_PROXY" }};
+        }
+        {{ else }}
+        return 404;
+        {{ end }}
+    }
+
+{{range $domain := ls "/nginx_www_redirect_domains"}}
+    server {
+        listen [::]:443;
+        server_name www.{{$domain}};
+        return 301 https://{{$domain}}$request_uri;
+    }
+{{end}}
+
+{{range $app := lsdir "/nginx_proxy"}}
+    upstream {{$app}} {
+  {{$appdir := printf "/nginx_proxy/%s/*" $app}}{{range gets $appdir}}
+        server {{.Value}};
+  {{end}}
+    }
+
+    server {
+        listen [::]:443;
+        server_name {{$app}};
+
+        location / {
+            proxy_pass http://{{$app}};
+        }
+    }
+{{end}}
+}
