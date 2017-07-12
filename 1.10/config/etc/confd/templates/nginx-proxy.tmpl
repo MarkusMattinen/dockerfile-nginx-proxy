@@ -105,7 +105,14 @@ http {
     server {
         set $server_addr_port '${server_addr}:${server_port}';
         listen [::]:80 default ipv6only=off;
-        return 301 https://$host$request_uri;
+
+        location /.well-known {
+            alias /var/www/letsencrypt/.well-known;
+        }
+
+        location / {
+            return 301 https://$host$request_uri;
+        }
     }
 
     server {
