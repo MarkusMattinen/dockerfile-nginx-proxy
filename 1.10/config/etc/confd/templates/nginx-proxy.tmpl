@@ -78,6 +78,9 @@ http {
     proxy_set_header X-Real-IP $header_x_real_ip;
     proxy_set_header X-Scheme $header_x_scheme;
 
+    # fix Destination header
+    proxy_set_header Destination $fixed_destination;
+
     proxy_http_version 1.1;
     proxy_redirect off;
     proxy_buffering off;
@@ -87,15 +90,15 @@ http {
     ssl_session_timeout 1d;
     ssl_session_cache shared:SSL:50m;
     ssl_session_tickets off;
-    
+
     ssl_dhparam /etc/nginx/dhparam4096.pem;
 
     ssl_protocols TLSv1.2;
     ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';
     ssl_prefer_server_ciphers on;
-    
+
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
-    
+
     proxy_hide_header X-Content-Type-Options;
     proxy_hide_header X-XSS-Protection;
     proxy_hide_header X-Permitted-Cross-Domain-Policies;
@@ -106,6 +109,11 @@ http {
 
     server {
         set $server_addr_port '${server_addr}:${server_port}';
+        set $fixed_destination $http_destination;
+        if ( $http_destination ~* ^https(.*)$ ) {
+          set $fixed_destination http$1;
+        }
+
         listen [::]:80 default ipv6only=off;
 
         location /.well-known {
@@ -119,6 +127,11 @@ http {
 
     server {
         set $server_addr_port '${server_addr}:${server_port}';
+        set $fixed_destination $http_destination;
+        if ( $http_destination ~* ^https(.*)$ ) {
+          set $fixed_destination http$1;
+        }
+
         listen [::]:443 ssl ipv6only=off default;
         server_name _;
 
@@ -138,6 +151,11 @@ http {
 {{range $domain := ls "/nginx_www_redirect_domains"}}
     server {
         set $server_addr_port '${server_addr}:${server_port}';
+        set $fixed_destination $http_destination;
+        if ( $http_destination ~* ^https(.*)$ ) {
+          set $fixed_destination http$1;
+        }
+
         listen [::]:443;
 
         ssl_certificate /usr/local/etc/ssl/private/www.{{$domain}}/tls.crt;
@@ -158,6 +176,11 @@ http {
 
     server {
         set $server_addr_port '${server_addr}:${server_port}';
+        set $fixed_destination $http_destination;
+        if ( $http_destination ~* ^https(.*)$ ) {
+          set $fixed_destination http$1;
+        }
+
         listen [::]:443;
 
         ssl_certificate /usr/local/etc/ssl/private/{{$app}}/tls.crt;
