@@ -18,4 +18,6 @@ ADD config/etc/nginx /etc/nginx
 ADD config/etc/supervisor/conf.d /etc/supervisor/conf.d
 ADD config/init /init
 
+RUN mkdir -p /etc/nginx/conf.d
+
 EXPOSE 80 443
