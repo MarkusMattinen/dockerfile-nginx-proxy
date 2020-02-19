@@ -1,11 +1,15 @@
 # nginx proxy, confd and supervisord on Ubuntu Trusty
 FROM markusma/nginx:1.10
 
-RUN add-apt-repository ppa:certbot/certbot \
- && apt-get update \
- && apt-get install -y --no-install-recommends certbot python-ndg-httpsclient \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+#RUN add-apt-repository ppa:certbot/certbot \
+# && apt-get update \
+# && apt-get install -y --no-install-recommends certbot python-ndg-httpsclient \
+# && apt-get clean \
+# && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN wget https://dl.eff.org/certbot-auto -O /usr/local/bin/certbot-auto \
+ && chmod +x /usr/local/bin/certbot-auto \
+ && yes | certbot-auto --install-only
 
 RUN mkdir -p /var/www/letsencrypt
 
