@@ -1,3 +1,0 @@
-confdir = "/etc/confd"
-interval = 5
-watch = true

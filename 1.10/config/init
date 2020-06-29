@@ -1,8 +1,0 @@
-#!/bin/sh
-
-echo "[confd] waiting for confd to refresh config files"
-until confd -onetime -node http://etcd:4001 -config-file /etc/confd/confd.toml; do
-  sleep 1
-done
-
-exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
