@@ -1,0 +1,4 @@
+backend = "etcdv3"
+confdir = "/etc/confd"
+interval = 5
+watch = true

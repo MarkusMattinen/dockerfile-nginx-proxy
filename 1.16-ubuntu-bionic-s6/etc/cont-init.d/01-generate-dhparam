@@ -1,0 +1,8 @@
+#!/usr/bin/execlineb -P
+
+if -t { s6-test ! -f /etc/nginx/dhparam4096.pem }
+if
+{
+  export RANDFILE .rnd
+  openssl dhparam -out /etc/nginx/dhparam4096.pem 4096
+}
