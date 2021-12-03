@@ -1,5 +1,5 @@
 # nginx proxy, confd and s6 on Ubuntu Bionic
-FROM markusma/nginx:1.16-ubuntu-bionic-s6
+FROM markusma/nginx:1.20-ubuntu-bionic-s6
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends software-properties-common \
