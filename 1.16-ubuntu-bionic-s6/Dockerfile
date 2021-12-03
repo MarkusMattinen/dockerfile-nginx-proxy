@@ -15,6 +15,7 @@ RUN apt-get update \
 # && yes | certbot-auto --install-only
 
 COPY etc/ /etc/
+COPY bin/ /usr/local/bin/
 
 RUN mkdir -p /var/www/letsencrypt /etc/nginx/conf.d
 

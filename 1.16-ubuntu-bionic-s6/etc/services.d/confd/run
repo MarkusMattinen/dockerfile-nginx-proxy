@@ -1,3 +1,4 @@
 #!/usr/bin/execlineb -P
+
 with-contenv
 confd -node http://etcd:4001 -config-file /etc/confd/confd.toml
